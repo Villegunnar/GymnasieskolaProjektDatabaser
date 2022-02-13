@@ -21,7 +21,6 @@ namespace GymnasieskolaProjektDatabaser.Models
                 Console.WriteLine($"{item.Förnamn} {item.Efternamn}");
             }
             Done();
-
         }
         public static void GetAllUniqueClasses()
         {
@@ -32,7 +31,6 @@ namespace GymnasieskolaProjektDatabaser.Models
 
             foreach (var item in allClasses)
             {
-
                 Console.WriteLine($"Klassnamn: {item}");
             }
             Done();
@@ -55,7 +53,6 @@ namespace GymnasieskolaProjektDatabaser.Models
                         Console.WriteLine($"{item.Förnamn} {item.Efternamn}");
                     }
                     Done();
-
                 }
                 if (ascOrDesc.ToUpper() == "DESC")
                 {
@@ -100,9 +97,6 @@ namespace GymnasieskolaProjektDatabaser.Models
                     Done();
                 }
             }
-
-
-
         }
         public static void DisplayStudentInfo()
         {
@@ -131,11 +125,9 @@ namespace GymnasieskolaProjektDatabaser.Models
             Console.ReadLine();
         }
         public static void ActiveCourses()
-        {
-        
+        { 
             using GymnasieskolaDbContext Context = new GymnasieskolaDbContext();
             
-      
             DateTime today = DateTime.Now.Date;
             TitleAndPercentage("Alla aktiva kurser");
             var activeCourse = from TblKurs in Context.TblKurser
@@ -143,14 +135,10 @@ namespace GymnasieskolaProjektDatabaser.Models
                                where TblKurs.StartDatum < today && TblKurs.SlutDatum > today
                                select TblKurs;
 
-
             foreach (var item in activeCourse)
             {
                 Console.WriteLine($"Kursnamn: {item.KursNamn}\nKursen startar: {item.StartDatum}\nKursen slutar: {item.SlutDatum}");
             }
-
-
-
             Done();
         }
         public static void ClearWriteLine(string text = "")
@@ -162,23 +150,9 @@ namespace GymnasieskolaProjektDatabaser.Models
         {
             Console.Clear();
             TextTyper(tempText, 20);
-
-            //for (int i = 0; i <= 99; i++)
-            //{
-            //    Console.ForegroundColor = ConsoleColor.White;
-            //    Console.Write($"\rProgress: {i}%   ");
-            //    Thread.Sleep(tempSleepTime);
-
-            //}
-            //Console.ForegroundColor = ConsoleColor.Green;
-            //Console.WriteLine("\rProgress: 100%   ");
-            //Console.ForegroundColor = ConsoleColor.White;
-            //Console.WriteLine();
-
         }
         public static void TextTyper(string tempText = "", int temptextSpeed = 0)
         {
-
             string text = tempText;
             int textSpeed = temptextSpeed;
 
@@ -193,7 +167,7 @@ namespace GymnasieskolaProjektDatabaser.Models
         public static void StaffInEachDepartment()
         {
             using GymnasieskolaDbContext Context = new GymnasieskolaDbContext();
-            TitleAndPercentage("Hur många jobbar på de olika avdelningarna\n\n", 25);
+
 
             var displayStudentInfo = (from p in Context.TblPersonalen
                                       join e in Context.TblBefattningar
@@ -205,15 +179,7 @@ namespace GymnasieskolaProjektDatabaser.Models
                                           LastName = p.Efternamn,
                                           Position = e.Befattning,
                                           Section = e.Avdelning
-
-
                                       }).ToList();
-
-            foreach (var p in displayStudentInfo)
-            {
-                Console.WriteLine($"ID: {p.ID}\nNamn: {p.FirstName} {p.LastName}\nBefattning: {p.Position}\nAvdelning: {p.Section}\n");
-            }
-            
 
             int countId1 = Context.TblPersonalen.Where(x => x.BefattningId == 1).Count();
 
@@ -228,9 +194,8 @@ namespace GymnasieskolaProjektDatabaser.Models
             int countId6 = Context.TblPersonalen.Where(x => x.BefattningId == 6).Count();
 
 
+            TitleAndPercentage("Hur många jobbar på de olika avdelningarna\n\n", 25);
             Console.WriteLine($"Antal anställda som lärare: {countId1}\nAntal anställda som vaktmästare: {countId2}\nAntal anställda inom IT: {countId3}\nAntal Chefer: {countId4}\nAntal anställda inom Administraion: {countId5}\nAntal Utbildningsledare: {countId6}");
-
-
             Done();
         }
         public static void AllCourses()
@@ -248,6 +213,5 @@ namespace GymnasieskolaProjektDatabaser.Models
             }
             Done();
         }
-
     }
 }
