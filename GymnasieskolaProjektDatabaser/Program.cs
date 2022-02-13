@@ -14,14 +14,14 @@ namespace GymnasieskolaProjektDatabaser
             bool loggedIn = true;
             while (loggedIn)
             {
-                Metoder.ClearWriteLine("1. Elever\n2. Personal\n3. Kurser\n4. Löner\n\nESC för att avsluta programmet\n");
+                Metoder.ClearWriteLine("1. Elever\n2. Personal\n3. Kurser\n\nESC för att avsluta programmet");
                 var keyInfo = Console.ReadKey(intercept: true);
                 ConsoleKey menuChoice = keyInfo.Key;
                 switch (menuChoice)
                 {
                     case ConsoleKey.NumPad1:
                     case ConsoleKey.D1:
-                        Metoder.ClearWriteLine("ELEVER \n\n1. Förnamn via fallande sortering\n2. Förnamn via stigande sortering\n3. Efternamn via fallande sortering\n4. Efternamn via stigande sortering\n\n5. Visa information om alla ELEVER\n6. Uppdatera/korrigera en elevs information\n\n");
+                        Metoder.ClearWriteLine("ELEVER \n\n1. Förnamn via fallande sortering\n2. Förnamn via stigande sortering\n3. Efternamn via fallande sortering\n4. Efternamn via stigande sortering\n5. Visa information om alla elever");
                         ConsoleKey studentSwitch = Console.ReadKey(intercept: true).Key;
                         switch (studentSwitch)
                         {
@@ -39,7 +39,7 @@ namespace GymnasieskolaProjektDatabaser
                                 break;
                             case ConsoleKey.NumPad4:
                             case ConsoleKey.D4:
-                                Metoder.SortName("lastname", "asc");
+                                Metoder.SortName("lastname", "desc");
                                 break;
                             case ConsoleKey.NumPad5:
                             case ConsoleKey.D5:
@@ -53,7 +53,7 @@ namespace GymnasieskolaProjektDatabaser
                         break;
                     case ConsoleKey.NumPad2:
                     case ConsoleKey.D2:
-                        Metoder.ClearWriteLine("PERSONAL, \n\n1. All Personal som finns i databasen\n2. Hur många lärare jobbar på de olika avdelningarna\n\n");
+                        Metoder.ClearWriteLine("PERSONAL\n\n1. All Personal som finns i databasen\n2. Hur många lärare jobbar på de olika avdelningarna");
                         ConsoleKey staffSwitch = Console.ReadKey(intercept: true).Key;
                         switch (staffSwitch)
                         {
@@ -65,41 +65,31 @@ namespace GymnasieskolaProjektDatabaser
                             case ConsoleKey.D2:
                                 Metoder.StaffInEachDepartment();                             
                                 break;
-                            case ConsoleKey.NumPad3:
-                            case ConsoleKey.D3:
-                                Metoder.ClearWriteLine("Lägg till ny PERSONAL\n\nFörnamn: \nEfternamn: \nBefattning:\n");
-                                //Metoder.AddNewStaff();
+                            case ConsoleKey.Escape:
                                 break;
-                            case ConsoleKey.NumPad4:
-                            case ConsoleKey.D4:
-
+                            default:
                                 break;
-                            case ConsoleKey.NumPad5:
-                            case ConsoleKey.D5:
-
+                        }
+                        break;
+                    case ConsoleKey.NumPad3:
+                    case ConsoleKey.D3:
+                        Metoder.ClearWriteLine("KURSER\n\n1. Visa alla kurser\n2. Visa alla aktiva kurser");
+                        ConsoleKey courseSwitch = Console.ReadKey(intercept: true).Key;
+                        switch (courseSwitch)
+                        {
+                            case ConsoleKey.NumPad1:
+                            case ConsoleKey.D1:
+                                Metoder.AllCourses();
+                                break;
+                            case ConsoleKey.NumPad2:
+                            case ConsoleKey.D2:
+                                Metoder.ActiveCourses();
                                 break;
                             case ConsoleKey.Escape:
                                 break;
                             default:
                                 break;
                         }
-                        Console.ReadLine();
-                        break;
-                    case ConsoleKey.NumPad3:
-                    case ConsoleKey.D3:                
-                        Metoder.ActiveCourses();
-                        break;
-                    case ConsoleKey.NumPad4:
-                    case ConsoleKey.D4:
-                        Console.WriteLine("4");
-                        break;
-                    case ConsoleKey.NumPad5:
-                    case ConsoleKey.D5:
-                        Console.WriteLine("5");
-                        break;
-                    case ConsoleKey.NumPad6:
-                    case ConsoleKey.D6:
-                        Console.WriteLine("6");
                         break;
                     case ConsoleKey.Escape:
 

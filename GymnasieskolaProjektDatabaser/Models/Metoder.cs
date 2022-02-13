@@ -12,7 +12,7 @@ namespace GymnasieskolaProjektDatabaser.Models
         public static void DisplayStaff()
         {
             using GymnasieskolaDbContext Context = new GymnasieskolaDbContext();
-
+            TitleAndPercentage("Alla Anställda\n\n");
             var dispAllStaff = from TblPersonal in Context.TblPersonalen
                                select TblPersonal;
 
@@ -35,6 +35,7 @@ namespace GymnasieskolaProjektDatabaser.Models
 
                 Console.WriteLine($"Klassnamn: {item}");
             }
+            Done();
         }
         public static void SortName(string firstOrLastName, string ascOrDesc)
         {
@@ -43,7 +44,7 @@ namespace GymnasieskolaProjektDatabaser.Models
             {
                 if (ascOrDesc.ToUpper() == "ASC")
                 {
-                    TitleAndPercentage("Sorterar FÖRNAMN via FALLANDE\n", 25);
+                    TitleAndPercentage("Sorterar FÖRNAMN via FALLANDE\n\n", 25);
 
                     var sortByFnameAsc = from TblElev in Context.TblElever
                                          orderby TblElev.Förnamn
@@ -58,7 +59,7 @@ namespace GymnasieskolaProjektDatabaser.Models
                 }
                 if (ascOrDesc.ToUpper() == "DESC")
                 {
-                    TitleAndPercentage("Sorterar FÖRNAMN via STIGANDE\n", 25);
+                    TitleAndPercentage("Sorterar FÖRNAMN via STIGANDE\n\n", 25);
                     var sortByFnameDesc = from TblElev in Context.TblElever
                                           orderby TblElev.Förnamn descending
                                           select TblElev;
@@ -74,7 +75,7 @@ namespace GymnasieskolaProjektDatabaser.Models
             {
                 if (ascOrDesc.ToUpper() == "ASC")
                 {
-                    TitleAndPercentage("Sorterar EFTERNAMN via FALLANDE\n", 25);
+                    TitleAndPercentage("Sorterar EFTERNAMN via FALLANDE\n\n", 25);
                     var sortByLnameAsc = from TblElev in Context.TblElever
                                          orderby TblElev.Efternamn
                                          select TblElev;
@@ -87,7 +88,7 @@ namespace GymnasieskolaProjektDatabaser.Models
                 }
                 if (ascOrDesc.ToUpper() == "DESC")
                 {
-                    TitleAndPercentage("Sorterar EFTERNAMN via STIGANDE\n", 25);
+                    TitleAndPercentage("Sorterar EFTERNAMN via STIGANDE\n\n", 25);
                     var sortByLnameDesc = from TblElev in Context.TblElever
                                           orderby TblElev.Efternamn descending
                                           select TblElev;
@@ -106,7 +107,7 @@ namespace GymnasieskolaProjektDatabaser.Models
         public static void DisplayStudentInfo()
         {
             using GymnasieskolaDbContext Context = new GymnasieskolaDbContext();
-            TitleAndPercentage("Visa information om alla ELEVER\n", 25);
+            TitleAndPercentage("Visa information om alla elever\n\n", 25);
             var displayStudentInfo = (from p in Context.TblElever
                                       join e in Context.TblKlasser
                                       on p.KlassId equals e.KlassId                                  
@@ -120,7 +121,7 @@ namespace GymnasieskolaProjektDatabaser.Models
                                       }).ToList();
             foreach (var p in displayStudentInfo)
             {
-                Console.WriteLine($"ID: {p.ID} Namn: {p.FirstName} {p.LastName} Personnummer: {p.PersonalNumber} Klass: {p.ClassName}\n-----------------------------------------------------------------------");
+                Console.WriteLine($"ID: {p.ID}\nNamn: {p.FirstName} {p.LastName}\nPersonnummer: {p.PersonalNumber}\nKlass: {p.ClassName}\n");
             }
             Done();
         }
@@ -131,28 +132,21 @@ namespace GymnasieskolaProjektDatabaser.Models
         }
         public static void ActiveCourses()
         {
-
+        
             using GymnasieskolaDbContext Context = new GymnasieskolaDbContext();
-            TitleAndPercentage("Alla kurser\n", 25);
-            var activeCourses = from TblKurs in Context.TblKurser
-                                select TblKurs;
-
-            foreach (var item in activeCourses)
-            {
-
-                Console.WriteLine($"{item.KursNamn}");
-            }
-
+            
+      
             DateTime today = DateTime.Now.Date;
-
+            TitleAndPercentage("Alla aktiva kurser");
             var activeCourse = from TblKurs in Context.TblKurser
                                orderby TblKurs.KursId
                                where TblKurs.StartDatum < today && TblKurs.SlutDatum > today
                                select TblKurs;
 
+
             foreach (var item in activeCourse)
             {
-                Console.WriteLine($"Kursnamn: {item.KursNamn} Kursen startar: {item.StartDatum} och kurs slutar: {item.SlutDatum}");
+                Console.WriteLine($"Kursnamn: {item.KursNamn}\nKursen startar: {item.StartDatum}\nKursen slutar: {item.SlutDatum}");
             }
 
 
@@ -199,7 +193,7 @@ namespace GymnasieskolaProjektDatabaser.Models
         public static void StaffInEachDepartment()
         {
             using GymnasieskolaDbContext Context = new GymnasieskolaDbContext();
-            TitleAndPercentage("Hur många jobbar på de olika avdelningarna\n", 25);
+            TitleAndPercentage("Hur många jobbar på de olika avdelningarna\n\n", 25);
 
             var displayStudentInfo = (from p in Context.TblPersonalen
                                       join e in Context.TblBefattningar
@@ -217,57 +211,41 @@ namespace GymnasieskolaProjektDatabaser.Models
 
             foreach (var p in displayStudentInfo)
             {
-                Console.WriteLine($"ID: {p.ID} Namn: {p.FirstName} {p.LastName} Befattning: {p.Position} Avdelning: {p.Section}\n                                                               ");
+                Console.WriteLine($"ID: {p.ID}\nNamn: {p.FirstName} {p.LastName}\nBefattning: {p.Position}\nAvdelning: {p.Section}\n");
             }
             
 
-            var department1 = Context.TblPersonalen.Where(dep1 => dep1.BefattningId == 1).Count();
+            int countId1 = Context.TblPersonalen.Where(x => x.BefattningId == 1).Count();
 
-            var department2 = Context.TblPersonalen.Where(dep2 => dep2.BefattningId == 2).Count();
+            int countId2 = Context.TblPersonalen.Where(x => x.BefattningId == 2).Count();
 
-            var department3 = Context.TblPersonalen.Where(dep3 => dep3.BefattningId == 3).Count();
+            int countId3 = Context.TblPersonalen.Where(x => x.BefattningId == 3).Count();
 
-            var department4 = Context.TblPersonalen.Where(dep4 => dep4.BefattningId == 4).Count();
+            int countId4 = Context.TblPersonalen.Where(x => x.BefattningId == 4).Count();
 
-            var department5 = Context.TblPersonalen.Where(dep5 => dep5.BefattningId == 5).Count();
+            int countId5 = Context.TblPersonalen.Where(x => x.BefattningId == 5).Count();
 
-            var department6 = Context.TblPersonalen.Where(dep6 => dep6.BefattningId == 6).Count();
-
-
-            Console.WriteLine($"Antal anställda som lärare: {department1}\nAntal anställda som vaktmästare: {department2}\nAntal anställda inom IT: {department3}\nAntal Chefer: {department4}\nAntal anställda inom Administraion: {department5}\nAntal Utbildningsledare: {department6}");
+            int countId6 = Context.TblPersonalen.Where(x => x.BefattningId == 6).Count();
 
 
+            Console.WriteLine($"Antal anställda som lärare: {countId1}\nAntal anställda som vaktmästare: {countId2}\nAntal anställda inom IT: {countId3}\nAntal Chefer: {countId4}\nAntal anställda inom Administraion: {countId5}\nAntal Utbildningsledare: {countId6}");
 
 
+            Done();
+        }
+        public static void AllCourses()
+        {
+            TitleAndPercentage("Alla kurser\n\n", 25);
+            using GymnasieskolaDbContext Context = new GymnasieskolaDbContext();
 
+            var activeCourses = from TblKurs in Context.TblKurser
+                                select TblKurs;
 
-            //var totalWorkersInDepartment = from TblBefattning in Context.TblBefattningar
-            //                               select TblBefattning;
+            foreach (var item in activeCourses)
+            {
 
-
-            //foreach (var item in totalWorkersInDepartment)
-            //{
-
-            //    Console.WriteLine($"{item.Avdelning}");
-            //}
-
-
-
-
-            //var displayStudentInfo = (from p in Context.TblPersonalen
-            //                          join e in Context.TblBefattningar
-            //                          on p.BefattningId equals e.BefattningId
-            //                          select new
-            //                          {
-            //                              ID = p.PersonalId,
-            //                              FirstName = p.Förnamn,
-            //                              LastName = p.Efternamn,
-            //                              Posistion = e.Befattning
-            //                          }).ToList();
-            //foreach (var p in displayStudentInfo)
-            //{
-            //    Console.WriteLine($"ID: {p.ID} Namn: {p.FirstName} {p.LastName} Beffatning: {p.Posistion}\n-----------------------------------------------------------------------");
-            //}
+                Console.WriteLine($"{item.KursNamn}");
+            }
             Done();
         }
 
