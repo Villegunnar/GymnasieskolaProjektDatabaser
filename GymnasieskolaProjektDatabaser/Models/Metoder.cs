@@ -12,13 +12,25 @@ namespace GymnasieskolaProjektDatabaser.Models
         public static void DisplayStaff()
         {
             using GymnasieskolaDbContext Context = new GymnasieskolaDbContext();
-            TitleAndPercentage("Alla Anställda\n\n");
-            var dispAllStaff = from TblPersonal in Context.TblPersonalen
-                               select TblPersonal;
+            TextTyper("Alla Anställda\n\n", 25);
+
+            var dispAllStaff = (from p in Context.TblPersonalen
+                                join e in Context.TblBefattningar
+                                      on p.BefattningId equals e.BefattningId
+                                      select new
+                                      {
+                                          ID = p.PersonalId,
+                                          FirstName = p.Förnamn,
+                                          LastName = p.Efternamn,
+                                          DateOfEmployment = p.AnställningsDatum,
+                                          Post = e.Befattning
+                                      }).ToList();
+
 
             foreach (var item in dispAllStaff)
             {
-                Console.WriteLine($"{item.Förnamn} {item.Efternamn}");
+
+                Console.WriteLine($"ID: {item.ID}\nNamn: {item.FirstName} {item.LastName}\nBefattning: {item.Post}\nAnställningsdatum: {item.DateOfEmployment}\n");
             }
             Done();
         }
@@ -42,7 +54,7 @@ namespace GymnasieskolaProjektDatabaser.Models
             {
                 if (ascOrDesc.ToUpper() == "ASC")
                 {
-                    TitleAndPercentage("Sorterar FÖRNAMN via FALLANDE\n\n", 25);
+                    TextTyper("Sorterar FÖRNAMN via FALLANDE\n\n", 25);
 
                     var sortByFnameAsc = from TblElev in Context.TblElever
                                          orderby TblElev.Förnamn
@@ -56,7 +68,7 @@ namespace GymnasieskolaProjektDatabaser.Models
                 }
                 if (ascOrDesc.ToUpper() == "DESC")
                 {
-                    TitleAndPercentage("Sorterar FÖRNAMN via STIGANDE\n\n", 25);
+                    TextTyper("Sorterar FÖRNAMN via STIGANDE\n\n", 25);
                     var sortByFnameDesc = from TblElev in Context.TblElever
                                           orderby TblElev.Förnamn descending
                                           select TblElev;
@@ -72,7 +84,7 @@ namespace GymnasieskolaProjektDatabaser.Models
             {
                 if (ascOrDesc.ToUpper() == "ASC")
                 {
-                    TitleAndPercentage("Sorterar EFTERNAMN via FALLANDE\n\n", 25);
+                    TextTyper("Sorterar EFTERNAMN via FALLANDE\n\n", 25);
                     var sortByLnameAsc = from TblElev in Context.TblElever
                                          orderby TblElev.Efternamn
                                          select TblElev;
@@ -85,7 +97,7 @@ namespace GymnasieskolaProjektDatabaser.Models
                 }
                 if (ascOrDesc.ToUpper() == "DESC")
                 {
-                    TitleAndPercentage("Sorterar EFTERNAMN via STIGANDE\n\n", 25);
+                    TextTyper("Sorterar EFTERNAMN via STIGANDE\n\n", 25);
                     var sortByLnameDesc = from TblElev in Context.TblElever
                                           orderby TblElev.Efternamn descending
                                           select TblElev;
@@ -101,7 +113,7 @@ namespace GymnasieskolaProjektDatabaser.Models
         public static void DisplayStudentInfo()
         {
             using GymnasieskolaDbContext Context = new GymnasieskolaDbContext();
-            TitleAndPercentage("Visa information om alla elever\n\n", 25);
+            TextTyper("Visa information om alla elever\n\n", 25);
             var displayStudentInfo = (from p in Context.TblElever
                                       join e in Context.TblKlasser
                                       on p.KlassId equals e.KlassId                                  
@@ -113,9 +125,9 @@ namespace GymnasieskolaProjektDatabaser.Models
                                           PersonalNumber = p.Personnummer,
                                           ClassName = e.KlassNamn
                                       }).ToList();
-            foreach (var p in displayStudentInfo)
+            foreach (var item in displayStudentInfo)
             {
-                Console.WriteLine($"ID: {p.ID}\nNamn: {p.FirstName} {p.LastName}\nPersonnummer: {p.PersonalNumber}\nKlass: {p.ClassName}\n");
+                Console.WriteLine($"ID: {item.ID}\nNamn: {item.FirstName} {item.LastName}\nPersonnummer: {item.PersonalNumber}\nKlass: {item.ClassName}\n");
             }
             Done();
         }
@@ -129,7 +141,7 @@ namespace GymnasieskolaProjektDatabaser.Models
             using GymnasieskolaDbContext Context = new GymnasieskolaDbContext();
             
             DateTime today = DateTime.Now.Date;
-            TitleAndPercentage("Alla aktiva kurser");
+            TextTyper("Alla aktiva kurser\n\n", 25);
             var activeCourse = from TblKurs in Context.TblKurser
                                orderby TblKurs.KursId
                                where TblKurs.StartDatum < today && TblKurs.SlutDatum > today
@@ -137,7 +149,7 @@ namespace GymnasieskolaProjektDatabaser.Models
 
             foreach (var item in activeCourse)
             {
-                Console.WriteLine($"Kursnamn: {item.KursNamn}\nKursen startar: {item.StartDatum}\nKursen slutar: {item.SlutDatum}");
+                Console.WriteLine($"Kursnamn: {item.KursNamn}\nKursstart: {item.StartDatum}\nKursslut: {item.SlutDatum}\n\n");
             }
             Done();
         }
@@ -146,13 +158,14 @@ namespace GymnasieskolaProjektDatabaser.Models
             Console.Clear();
             Console.WriteLine(text);
         }
-        public static void TitleAndPercentage(string tempText = "", int tempSleepTime = 10)
-        {
-            Console.Clear();
-            TextTyper(tempText, 20);
-        }
+        //public static void ClearAndText(string tempText = "", int tempSleepTime = 10)
+        //{
+        //    Console.Clear();
+        //    TextTyper(tempText, 20);
+        //}
         public static void TextTyper(string tempText = "", int temptextSpeed = 0)
         {
+            Console.Clear();
             string text = tempText;
             int textSpeed = temptextSpeed;
 
@@ -194,13 +207,13 @@ namespace GymnasieskolaProjektDatabaser.Models
             int countId6 = Context.TblPersonalen.Where(x => x.BefattningId == 6).Count();
 
 
-            TitleAndPercentage("Hur många jobbar på de olika avdelningarna\n\n", 25);
+            TextTyper("Hur många jobbar på de olika avdelningarna\n\n", 25);
             Console.WriteLine($"Antal anställda som lärare: {countId1}\nAntal anställda som vaktmästare: {countId2}\nAntal anställda inom IT: {countId3}\nAntal Chefer: {countId4}\nAntal anställda inom Administraion: {countId5}\nAntal Utbildningsledare: {countId6}");
             Done();
         }
         public static void AllCourses()
         {
-            TitleAndPercentage("Alla kurser\n\n", 25);
+            TextTyper("Alla kurser\n\n", 25);
             using GymnasieskolaDbContext Context = new GymnasieskolaDbContext();
 
             var activeCourses = from TblKurs in Context.TblKurser

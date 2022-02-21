@@ -33,7 +33,7 @@ namespace GymnasieskolaProjektDatabaser.Data
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Data source = LAPTOP-CF9F7575;Initial Catalog=GymnasieDB;Integrated Security = True;");
+                optionsBuilder.UseSqlServer("Data source = DESKTOP-O8V61A2;Initial Catalog=GymnasieDB;Integrated Security = True;");
             }
         }
 
