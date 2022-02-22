@@ -1,52 +1,13 @@
 ﻿using GymnasieskolaProjektDatabaser.Data;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Linq;
 using System.Threading;
 
 namespace GymnasieskolaProjektDatabaser.Models
 {
-    class Metoder
+    public class Metoder
     {
-        public static void DisplayStaff()
-        {
-            using GymnasieskolaDbContext Context = new GymnasieskolaDbContext();
-            TextTyper("Alla Anställda\n\n", 25);
-
-            var dispAllStaff = (from p in Context.TblPersonalen
-                                join e in Context.TblBefattningar
-                                      on p.BefattningId equals e.BefattningId
-                                      select new
-                                      {
-                                          ID = p.PersonalId,
-                                          FirstName = p.Förnamn,
-                                          LastName = p.Efternamn,
-                                          DateOfEmployment = p.AnställningsDatum,
-                                          Post = e.Befattning
-                                      }).ToList();
-
-
-            foreach (var item in dispAllStaff)
-            {
-
-                Console.WriteLine($"ID: {item.ID}\nNamn: {item.FirstName} {item.LastName}\nBefattning: {item.Post}\nAnställningsdatum: {item.DateOfEmployment}\n");
-            }
-            Done();
-        }
-        public static void GetAllUniqueClasses()
-        {
-            using GymnasieskolaDbContext Context = new GymnasieskolaDbContext();
-
-            var allClasses = (from TblElev in Context.TblElever
-                              select TblElev.Klass).Distinct();
-
-            foreach (var item in allClasses)
-            {
-                Console.WriteLine($"Klassnamn: {item}");
-            }
-            Done();
-        }
         public static void SortName(string firstOrLastName, string ascOrDesc)
         {
             using GymnasieskolaDbContext Context = new GymnasieskolaDbContext();
@@ -116,11 +77,11 @@ namespace GymnasieskolaProjektDatabaser.Models
             TextTyper("Visa information om alla elever\n\n", 25);
             var displayStudentInfo = (from p in Context.TblElever
                                       join e in Context.TblKlasser
-                                      on p.KlassId equals e.KlassId                                  
+                                      on p.KlassId equals e.KlassId
                                       select new
                                       {
                                           ID = p.ElevId,
-                                          FirstName = p.Förnamn, 
+                                          FirstName = p.Förnamn,
                                           LastName = p.Efternamn,
                                           PersonalNumber = p.Personnummer,
                                           ClassName = e.KlassNamn
@@ -131,51 +92,63 @@ namespace GymnasieskolaProjektDatabaser.Models
             }
             Done();
         }
-        public static void Done()
+        public static void UpdateStudentInfo()
         {
-            Console.WriteLine("\nKlart! Tyck enter för att gå tillbaka till huvudmenyn.");
-            Console.ReadLine();
-        }
-        public static void ActiveCourses()
-        { 
-            using GymnasieskolaDbContext Context = new GymnasieskolaDbContext();
-            
-            DateTime today = DateTime.Now.Date;
-            TextTyper("Alla aktiva kurser\n\n", 25);
-            var activeCourse = from TblKurs in Context.TblKurser
-                               orderby TblKurs.KursId
-                               where TblKurs.StartDatum < today && TblKurs.SlutDatum > today
-                               select TblKurs;
+            TextTyper("Uppdatera en elevs information\n\n", 25);
+            Console.WriteLine("Välj det Student Id som du vill uppdatera informationen på: ");
+            int id = Convert.ToInt32(Console.ReadLine());
 
-            foreach (var item in activeCourse)
+            Console.WriteLine("Välj nytt namn: ");
+            string firstName = Console.ReadLine();
+            Console.WriteLine("Välj nytt efternamn: ");
+            string lastName = Console.ReadLine();
+            Console.WriteLine("Välj nytt klass id (2 = SUT20,3 = SUT21,4 = SUT22): ");
+            int classId = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine("Välj nytt personnummer: ");
+            string personalNumber = Console.ReadLine();
+
+           
+
+
+
+            using (var db = new GymnasieskolaDbContext())
             {
-                Console.WriteLine($"Kursnamn: {item.KursNamn}\nKursstart: {item.StartDatum}\nKursslut: {item.SlutDatum}\n\n");
+                var student = db.TblElever.Where(s => s.ElevId == id).FirstOrDefault();
+
+                student.Förnamn = firstName;
+                student.Efternamn = lastName;
+                student.KlassId = classId;
+                student.Personnummer = personalNumber;
+
+                db.SaveChanges();
+
+            };
+
+        }
+        public static void DisplayStaff()
+        {
+            using GymnasieskolaDbContext Context = new GymnasieskolaDbContext();
+            TextTyper("Alla Anställda\n\n", 25);
+
+            var dispAllStaff = (from p in Context.TblPersonalen
+                                join e in Context.TblBefattningar
+                                      on p.BefattningId equals e.BefattningId
+                                select new
+                                {
+                                    ID = p.PersonalId,
+                                    FirstName = p.Förnamn,
+                                    LastName = p.Efternamn,
+                                    DateOfEmployment = p.AnställningsDatum,
+                                    Post = e.Befattning
+                                }).ToList();
+
+
+            foreach (var item in dispAllStaff)
+            {
+
+                Console.WriteLine($"ID: {item.ID}\nNamn: {item.FirstName} {item.LastName}\nBefattning: {item.Post}\nAnställningsdatum: {item.DateOfEmployment}\n");
             }
             Done();
-        }
-        public static void ClearWriteLine(string text = "")
-        {
-            Console.Clear();
-            Console.WriteLine(text);
-        }
-        //public static void ClearAndText(string tempText = "", int tempSleepTime = 10)
-        //{
-        //    Console.Clear();
-        //    TextTyper(tempText, 20);
-        //}
-        public static void TextTyper(string tempText = "", int temptextSpeed = 0)
-        {
-            Console.Clear();
-            string text = tempText;
-            int textSpeed = temptextSpeed;
-
-            for (int i = 0; i < text.Length; i++)
-            {
-                Random randomColor = new Random();
-
-                Thread.Sleep(textSpeed);
-                Console.Write(text[i]);
-            }
         }
         public static void StaffInEachDepartment()
         {
@@ -225,6 +198,47 @@ namespace GymnasieskolaProjektDatabaser.Models
                 Console.WriteLine($"{item.KursNamn}");
             }
             Done();
+        }
+        public static void ActiveCourses()
+        {
+            using GymnasieskolaDbContext Context = new GymnasieskolaDbContext();
+
+            DateTime today = DateTime.Now.Date;
+            TextTyper("Alla aktiva kurser\n\n", 25);
+            var activeCourse = from TblKurs in Context.TblKurser
+                               orderby TblKurs.KursId
+                               where TblKurs.StartDatum < today && TblKurs.SlutDatum > today
+                               select TblKurs;
+
+            foreach (var item in activeCourse)
+            {
+                Console.WriteLine($"Kursnamn: {item.KursNamn}\nKursstart: {item.StartDatum}\nKursslut: {item.SlutDatum}\n\n");
+            }
+            Done();
+        }
+        public static void Done()
+        {
+            Console.WriteLine("\nKlart! Tyck enter för att gå tillbaka till huvudmenyn.");
+            Console.ReadLine();
+        }
+        public static void ClearWriteLine(string text = "")
+        {
+            Console.Clear();
+            Console.WriteLine(text);
+        }
+        public static void TextTyper(string tempText = "", int temptextSpeed = 0)
+        {
+            Console.Clear();
+            string text = tempText;
+            int textSpeed = temptextSpeed;
+
+            for (int i = 0; i < text.Length; i++)
+            {
+                Random randomColor = new Random();
+
+                Thread.Sleep(textSpeed);
+                Console.Write(text[i]);
+            }
         }
     }
 }

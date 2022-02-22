@@ -1,8 +1,7 @@
 ﻿using GymnasieskolaProjektDatabaser.Data;
 using GymnasieskolaProjektDatabaser.Models;
 using System;
-using System.Linq;
-using System.Threading;
+
 
 namespace GymnasieskolaProjektDatabaser
 {
@@ -14,14 +13,15 @@ namespace GymnasieskolaProjektDatabaser
             bool loggedIn = true;
             while (loggedIn)
             {
-                Metoder.ClearWriteLine("1. Elever\n2. Personal\n3. Kurser\n\nESC för att avsluta programmet");
+
+                Metoder.ClearWriteLine("GymnasieSkola\n\n1. Elever\n2. Personal\n3. Kurser\n\nESC för att avsluta programmet");
                 var keyInfo = Console.ReadKey(intercept: true);
                 ConsoleKey menuChoice = keyInfo.Key;
                 switch (menuChoice)
                 {
                     case ConsoleKey.NumPad1:
                     case ConsoleKey.D1:
-                        Metoder.ClearWriteLine("ELEVER \n\n1. Förnamn via fallande sortering\n2. Förnamn via stigande sortering\n3. Efternamn via fallande sortering\n4. Efternamn via stigande sortering\n5. Visa information om alla elever");
+                        Metoder.ClearWriteLine("ELEVER \n\n1. Förnamn via fallande sortering\n2. Förnamn via stigande sortering\n3. Efternamn via fallande sortering\n4. Efternamn via stigande sortering\n5. Visa information om alla elever\n6. Uppdatera en elevs information");
                         ConsoleKey studentSwitch = Console.ReadKey(intercept: true).Key;
                         switch (studentSwitch)
                         {
@@ -44,6 +44,10 @@ namespace GymnasieskolaProjektDatabaser
                             case ConsoleKey.NumPad5:
                             case ConsoleKey.D5:
                                 Metoder.DisplayStudentInfo();
+                                break;
+                            case ConsoleKey.NumPad6:
+                            case ConsoleKey.D6:
+                                Metoder.UpdateStudentInfo();
                                 break;
                             case ConsoleKey.Escape:
                                 break;
